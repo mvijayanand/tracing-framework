@@ -17,10 +17,10 @@ goog.require('goog.dom.classes');
 goog.require('goog.events.EventType');
 goog.require('goog.soy');
 goog.require('goog.style');
-goog.require('wtf.analysis.db.QueryDumpFormat');
 goog.require('wtf.app.ui.TabPanel');
 goog.require('wtf.app.ui.query.QueryTableSource');
 goog.require('wtf.app.ui.query.querypanel');
+goog.require('wtf.db.QueryDumpFormat');
 goog.require('wtf.events');
 goog.require('wtf.events.EventType');
 goog.require('wtf.events.KeyboardScope');
@@ -46,7 +46,7 @@ wtf.app.ui.query.QueryPanel = function(documentView) {
 
   /**
    * Database.
-   * @type {!wtf.analysis.db.EventDatabase}
+   * @type {!wtf.db.EventDatabase}
    * @private
    */
   this.db_ = db;
@@ -73,7 +73,7 @@ wtf.app.ui.query.QueryPanel = function(documentView) {
 
   /**
    * Current query results, if any.
-   * @type {wtf.analysis.db.QueryResult}
+   * @type {wtf.db.QueryResult}
    * @private
    */
   this.currentResults_ = null;
@@ -143,7 +143,7 @@ wtf.app.ui.query.QueryPanel = function(documentView) {
         }
 
         var dump = this.currentResults_.dump(
-            wtf.analysis.db.QueryDumpFormat.CSV);
+            wtf.db.QueryDumpFormat.CSV);
         if (dump) {
           var pal = wtf.pal.getPlatform();
           pal.writeTextFile('wtf-query.csv', dump, 'text/csv');

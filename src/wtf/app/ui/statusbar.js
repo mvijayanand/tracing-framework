@@ -101,21 +101,21 @@ wtf.app.ui.Statusbar.prototype.update_ = function() {
   var db = this.documentView_.getDatabase();
   var selection = this.documentView_.getSelection();
 
+  if (!db.getLastEventTime()) {
+    return;
+  }
+
   var timebase = db.getTimebase();
   var firstEventTime = db.getFirstEventTime();
   var lastEventTime = db.getLastEventTime();
-  var totalEventCount = db.getTotalEventCount();
-
-  var zoneIndices = db.getZoneIndices();
-  var totalTime = 0;
-  var totalUserTime = 0;
-  for (var n = 0; n < zoneIndices.length; n++) {
-    var zoneIndex = zoneIndices[n];
-    totalTime += zoneIndex.getRootTotalTime();
-    totalUserTime += zoneIndex.getRootUserTime();
+  var totalEventCount = 0;
+  var zones = db.getZones();
+  for (var n = 0; n < zones.length; n++) {
+    var eventList = zones[n].getEventList();
+    totalEventCount += eventList.getCount();
   }
 
-  var table = selection.computeEventDataTable();
+  var table = selection.computeEventStatistics();
   var filteredEventCount = table.getFilteredEventCount();
 
   var selectionCounts = [
@@ -138,11 +138,6 @@ wtf.app.ui.Statusbar.prototype.update_ = function() {
       totalDuration
     ].join('/'));
   }
-
-  dom.setTextContent(this.divs_.timeTotals, [
-    wtf.util.formatTime(totalUserTime) + ' u',
-    wtf.util.formatTime(totalTime) + ' t'
-  ].join('/'));
 
   dom.setTextContent(this.divs_.timeRange, [
     wtf.util.formatWallTime(timebase + firstEventTime),
